@@ -71,7 +71,7 @@ public class UserController {
 		 
 
 		List<User> userList = null;
-	
+	          
 			userList =  userdao.findAll();
 		
 		model.addAttribute("userList", userList);
@@ -80,43 +80,46 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/SearchUser", method = RequestMethod.POST)
-	public String searchUser(ModelMap model, @RequestParam("id") Integer id, @RequestParam("name") String name,HttpSession ses)
+	public String searchUser(ModelMap model, @RequestParam("id")String id, @RequestParam("name") String name,HttpSession ses)
 			throws SQLException {
 
 		
-		  if(ses.getAttribute("login_user")==null) { return "LGN001";
+		  if(ses.getAttribute("login_user")==null) { 
+			  return "LGN001";
 		  
 		  }
+		  List<User> userList = null;
+		 if(id.equals("") && name.equals("")) {
+			 userList = userdao.findAll();
+			 model.addAttribute("userList", userList);
+		 }
 		 
-		List<User> userList = null;
-		userList = userdao.findAll();
-		
-
-		ArrayList<User> matchedUser = new ArrayList<User>();
-		model.addAttribute("userList", userList);
-		System.out.println(name + id);
-		if (name == "" && id<0) {
-			matchedUser = null;
-
-			  model.addAttribute("allUser", userList);
+		 else if(!id.equals("")) {
+			 int temp = Integer.parseInt(id);
+		     Integer searchId= (Integer) temp;
+		    	 userList=userdao.findDistinctByUserId(searchId);
+		    	if(userList != null) {
+		    		model.addAttribute("userList", userList);
+		    	}
+		    	else {
+		    		userList=null;
+		    		 model.addAttribute("userList", userList);
+		    	}
+		    		
+					
+		     
+		    
+		 }
+		 else {
+			     userList =userdao.findDistinctByNameContaining(name);
+			      model.addAttribute("userList", userList);
+			 
+		 }
+          
 			return "USR003";
 		}
 
-		else {
-			for (User u : userList) {
-
-				if (u.getUserId()== id || u.getName().equals(name)) {
-					matchedUser.add(u);
-				}
-
-			}
-
-			
-            model.addAttribute("allUser",  matchedUser);
-			return "USR003";
-		}
-
-	}
+	
 
 	@RequestMapping(value = "/AddUserPage", method = RequestMethod.GET)
 	public ModelAndView addUserPage(ModelMap model,HttpSession ses) {
@@ -180,7 +183,9 @@ public class UserController {
 	@RequestMapping(value = "/UpdateUserPage", method = RequestMethod.GET)
 	public ModelAndView updateUserPage(@RequestParam("id") Integer id, ModelMap model,HttpSession ses) throws SQLException {
 		
-		  if(ses.getAttribute("login_user")==null) { return new ModelAndView("LGN001");
+		  if(ses.getAttribute("login_user")==null) { 
+			  
+			  return new ModelAndView("LGN001");
 		  
 		  }
 		 
@@ -192,7 +197,8 @@ public class UserController {
 	public String updateUser(HttpSession ses,@ModelAttribute("user") User user, ModelMap model,
 			@RequestParam("confirmpass") String confirmpass) throws SQLException {
 		
-		  if(ses.getAttribute("login_user")==null) { return "LGN001";
+		  if(ses.getAttribute("login_user")==null) {
+			  return "LGN001";
 		  
 		  }
 		 
@@ -234,6 +240,11 @@ public class UserController {
 		model.addAttribute("userList", userList);
 		return "redirect:/ShowUser";
 
+	}
+	
+	@RequestMapping(value= "/Reset", method=RequestMethod.GET)
+	public String reset() {
+		return "USR003";
 	}
 
 }

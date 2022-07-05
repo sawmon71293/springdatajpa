@@ -7,7 +7,10 @@ import java.sql.SQLException;
 
 
 
+
 import java.util.List;
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,17 +52,56 @@ public class StudentController {
 	}
 	
 	@RequestMapping(value = "/SearchStudent", method = RequestMethod.POST)
-	public String searchStudent(ModelMap model, HttpSession ses) throws SQLException {
+	public String searchStudent(ModelMap model, HttpSession ses, @RequestParam("id") String id, @RequestParam("name") String name,
+			@RequestParam("course") String course) throws SQLException {
+		System.out.println("the id value is " + id);
 		if(ses.getAttribute("login_user")==null) { 
 			  return "LGN001";
 		  
 		  }
+			
+			  System.out.println(id + name + course);
+			  if(id.equals("") && name.equals("") && course.equals("")) {
+				 List<Student> studentList =studentDAO.findAll(); 
+				  model.addAttribute("studentList", studentList); 
+				  return "STU003";
+			  }
+			 
+			  
+			   
+	      else { 
+	    	  List<Student> studentList=null;
+	    	  int temp=0;
+	    	  if(!id.equals(""))
+	    	  {        try {
+	    		  temp=Integer.parseInt(id);
+	    	  }catch(NumberFormatException ex) {
+	    		  String warning="Enter a number for Student Id";
+	    		  model.addAttribute("warning",warning);
+	    		  return "STU003";
+	    	  }
+	    		     Integer searchId=  (Integer)temp;
+	    		Student student=studentDAO.findDistinctById(searchId);
+	    		if(student!=null) {
+	    		model.addAttribute("studentList",student);
+	    		}
+	    		else {
+	    			model.addAttribute("studentList",studentList);
+	    		}
+	    		return "STU003";
+	    	  }
+	    	  else if(id.equals("")|| name.equals("")||course.equals("")) {
+	    		  
+	    		  String searchName= name.isBlank() ? "~" :name;
+	    		  String searchCourse=course.isBlank() ? "~" :course;
+	    		  studentList=studentDAO.findDistinctByNameContainingOrCourses_NameContaining(searchName, searchCourse);
+	    		  model.addAttribute("studentList",studentList);
+	  			return "STU003";
+	    	  }
+			return "STU003";
+			
+	}
 		
-		List<Student> studentList =  studentDAO.findAll();
-	  	model.addAttribute("studentList", studentList);
-	  	
-		
-		return "STU003";
 	}
 
 	@RequestMapping(value = "/addStuPage", method = RequestMethod.GET)
@@ -69,8 +111,9 @@ public class StudentController {
 			  return new ModelAndView("LGN001");
 		  
 		  }
-		 
+	
 		List<Course> allCourses =  courseDAO.findAll();
+		 System.out.println(allCourses);
 		model.addAttribute("courseList", allCourses);
 		return new ModelAndView("STU001", "student", new Student());
 	}
@@ -84,7 +127,7 @@ public class StudentController {
 		  }
 		 
 		List<Course> allCourses =  courseDAO.findAll();
-		session.setAttribute("courseList", allCourses);
+		model.addAttribute("courseList", allCourses);
 		model.addAttribute("success", "Registered Successfully!");
 		return new ModelAndView("STU001", "student", new Student());
 	}
@@ -97,7 +140,7 @@ public class StudentController {
 		  
 		  }
 		 
-		
+		System.out.println(student.toString());
 		List<Course> allCourses =  courseDAO.findAll();
 		model.addAttribute("courseList", allCourses);
 		if (bs.hasErrors()) {
@@ -116,7 +159,8 @@ public class StudentController {
 	@RequestMapping(value = "/AddStudent", method = RequestMethod.GET)
 	public String addStudent1( HttpSession ses) throws SQLException {
 		
-		  if(ses.getAttribute("login_user")==null) { return "LGN001";
+		  if(ses.getAttribute("login_user")==null) {
+			  return "LGN001";
 		  
 		  }
 		 
@@ -165,7 +209,8 @@ public class StudentController {
 	@RequestMapping(value = "/DeleteStudent", method = RequestMethod.GET)
 	public String deleteStudent(@RequestParam("id") Integer id, ModelMap model, HttpSession ses) throws SQLException {
 		
-		  if(ses.getAttribute("login_user")==null) { return "LGN001";
+		  if(ses.getAttribute("login_user")==null) {
+			  return "LGN001";
 		  
 		  }
 		 
@@ -174,7 +219,10 @@ public class StudentController {
 	}
 	
 	
-	
+	@RequestMapping(value= "/ResetStudent", method=RequestMethod.GET)
+	public String reset() {
+		return "STU003";
+	}
 	
 
 	

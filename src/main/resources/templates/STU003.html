@@ -55,6 +55,10 @@
       <div class="main_contents">
     <div id="sub_content">
       <form class="row g-3 mt-3 ms-2" th:action="@{/SearchStudent}" method="post">
+      <div class="col-auto">
+       <p style="color: red" th:if="${warning}" th:text="${warning}"></p>
+         
+        </div>
         <div class="col-auto">
           <label for="staticEmail2" class="visually-hidden">studentID</label>
           <input type="text"  class="form-control" id="staticEmail2" name="id" placeholder="Student ID" >
@@ -71,7 +75,7 @@
           <button type="submit" class="btn btn-success mb-3">Search</button>
         </div>
         <div class="col-auto">
-          <button type="reset" class="btn btn-secondary mb-3">Reset</button>
+           <a th:href="@{/ResetStudent}"class="btn btn-danger mb-3  ">Reset</a>
         </div>
       </form>
 <div>

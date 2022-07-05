@@ -1,7 +1,7 @@
 package com.project;
 
 
-import javax.management.relation.Role;
+
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ class StudentRepositoryTest {
 	}
 	
 	
-	
+	@Test
 	public void createNewStudentWithTwoCourses() {
 		
 		  Course course1= entityManager.find(Course.class, 1); 
@@ -96,7 +96,7 @@ class StudentRepositoryTest {
 		System.out.println(student.getCourses());
 	}
 	
-	@Test
+	
 	public void testRemoveStudent() {
 		studentRepository.deleteById(6);
 	}

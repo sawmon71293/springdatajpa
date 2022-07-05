@@ -38,6 +38,9 @@ public class User {
 		this.password = password;
 		this.role = role;
 	}
+	public User(Integer userId) {
+		this.userId=userId;
+	}
 	public Integer getUserId() {
 		return userId;
 	}
