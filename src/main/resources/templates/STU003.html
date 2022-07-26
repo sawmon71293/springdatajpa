@@ -1,137 +1,260 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{test.css}" />
+    <link href="${testCss}" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/83e4876698.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
 
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
 
-<head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" th:href="@{test.css}"> 
-		<link href="${testCss}" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Course Registration</title>
+  </head>
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-    
-        <title>Course Registration</title>
-</head>
+  <body>
+    <div id="testheader">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5">
+            <a th:href="@{MNU001.html}"><h3>Student Registration</h3></a>
+          </div>
+          <div class="col-md-6">
+            <p
+              th:if="${session.login_user!=null}"
+              th:text="${session.login_user.name}"
+            ></p>
+            <p
+              th:text=" ${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"
+            ></p>
+          </div>
+          <div class="col-md-1">
+            <a th:href="@{/logout}">
+              <button class="btn-basic" id="lgnout-button">Log Out</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<body>
- 
-  <div id="testheader">
     <div class="container">
-        <div class=row>        
-            <div class="col-md-5 ">
-        <a th:href="@{MNU001.html}"><h3>Student Registration</h3></a>
-    </div>  
-    <div class="col-md-6">
-        <p th:text="${session.login_user}"> </p>
-        <p th:text=" ${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></p>
-    </div>  
-    <div class="col-md-1" >
-         <a th:href="@{/logout}"> <button class="btn-basic" id="lgnout-button">Log Out</button></a>
-    </div>        
-</div>
-</div>
+      <div class="sidenav">
+        <button class="dropdown-btn">
+          Class Management
+          <i class="fa fa-caret-down"></i>
+        </button>
 
-</div>
-   
-    <div class="container">
-    <div class="sidenav">
-        
-        <button class="dropdown-btn" > Class Management <i class="fa fa-caret-down"></i></button>
-        
-            <div class="dropdown-container">
-          <a th:href="@{/AddCoursePage}">Course Registration </a>
-          <a th:href="@{/AddStudent}">Student Registration </a>
-          <a th:href="@{/SearchStudentPage}">Student Search </a>
+        <div class="dropdown-container">
+          <a th:href="@{/AddCoursePage}">Course Registration</a>
+          <a th:href="@{/AddStudent}">Student Registration</a>
+          <a th:href="@{/SearchStudentPage}">Student Search</a>
         </div>
         <a th:href="@{/ShowUser}">Users Management</a>
       </div>
-      <div class="main_contents">
-    <div id="sub_content">
-      <form class="row g-3 mt-3 ms-2" th:action="@{/SearchStudent}" method="post">
-      <div class="col-auto">
-       <p style="color: red" th:if="${warning}" th:text="${warning}"></p>
-         
-        </div>
-        <div class="col-auto">
-          <label for="staticEmail2" class="visually-hidden">studentID</label>
-          <input type="text"  class="form-control" id="staticEmail2" name="id" placeholder="Student ID" >
-        </div>
-        <div class="col-auto">
-          <label for="inputPassword2" class="visually-hidden">studentName</label>
-          <input type="text" class="form-control" id="inputPassword2" name="name"placeholder="Student Name">
-        </div>
-        <div class="col-auto">
-            <label for="inputPassword2" class="visually-hidden">Course</label>
-            <input type="text" class="form-control" id="inputPassword2" name="course" placeholder="Course">
+      <!-- <div id="download" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Download File</h5>
+              <button
+                class="btn btn-secondary btn-sm me-2"
+                data-bs-dismiss="modal"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary btn-sm">
+                Save changes
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm me-2"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
           </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-success mb-3">Search</button>
         </div>
-        <div class="col-auto">
-           <a th:href="@{/ResetStudent}"class="btn btn-danger mb-3  ">Reset</a>
+      </div> -->
+      <div class="main_contents">
+        <div id="sub_content">
+          <form
+            class="row g-3 mt-3 ms-2"
+            th:action="@{/SearchStudent}"
+            method="post"
+          >
+            <div class="col-auto">
+              <p
+                style="color: red;"
+                th:if="${warning}"
+                th:text="${warning}"
+              ></p>
+            </div>
+            <div class="col-auto">
+              <label for="staticEmail2" class="visually-hidden">
+                studentID
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="staticEmail2"
+                name="id"
+                placeholder="Student ID"
+              />
+            </div>
+            <div class="col-auto">
+              <label for="inputPassword2" class="visually-hidden">
+                studentName
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="inputPassword2"
+                name="name"
+                placeholder="Student Name"
+              />
+            </div>
+            <div class="col-auto">
+              <label for="inputPassword2" class="visually-hidden">Course</label>
+              <input
+                type="text"
+                class="form-control"
+                id="inputPassword2"
+                name="course"
+                placeholder="Course"
+              />
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-success mb-3">Search</button>
+            </div>
+            <div class="col-auto">
+              <a th:href="@{/ResetStudent}" class="btn btn-danger mb-3">
+                Reset
+              </a>
+            </div>
+            <div class="col-auto">
+              <div class="dropdown me-2">
+                <button
+                  class="btn btn-outline-primary"
+                  data-bs-toggle="dropdown"
+                >
+                  Export
+                  <i class="fas fa-file-export"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <div class="row justify-content-center">
+                    <div class="col-4">
+                      <a th:href="@{'/report/'+${'pdf'}}" class="ms-2">
+                        <img
+                          src="https://cdn.discordapp.com/attachments/997050883617607720/999971567620599838/unknown.png"
+                          alt="html"
+                          width="30px"
+                        />
+                      </a>
+                    </div>
+                    <div class="col-4">
+                      <a th:href="@{'report/'+${'html'}}">
+                        <img
+                          src="https://cdn.discordapp.com/attachments/997050883617607720/999971568048414750/unknown.png"
+                          alt="pdf"
+                          width="30px"
+                        />
+                      </a>
+                    </div>
+                    <div class="col-4">
+                      <a th:href="@{'report/'+${'excel'}}"></a>
+                      <img
+                        src="https://cdn.discordapp.com/attachments/997050883617607720/999971568518172715/unknown.png"
+                        alt="xls"
+                        width="30px"
+                      />
+                    </a>
+                    </div>
+                  </div>
+                </ul>
+              </div>
+            </div>
+          </form>
+          <div>
+            <table class="table table-striped" id="stduentTable">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Student ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Course Name</th>
+                  <th scope="col">Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="student,iterationStatus: ${studentList}">
+                  <th scope="row" th:text="${iterationStatus.count}"></th>
+                  <td th:text="${student.id}"></td>
+                  <td th:text="${student.name}"></td>
+                  <td th:text="${student.courses}"></td>
+                  <td>
+                    <a
+                      th:href="@{/StudentData(id=${student.id})}"
+                      class="btn btn-secondary mb-2"
+                    >
+                      See More
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </form>
-<div>
-      <table class="table table-striped" id="stduentTable">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Student ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Course Name</th>
-            <th scope="col">Details</th>
-          </tr>
-        </thead>
-        <tbody>
-       
-        <tr th:each="student,iterationStatus: ${studentList}">
-           
-            <th scope="row"   th:text="${iterationStatus.count}" ></th>
-            <td th:text="${student.id}">
-            <td th:text="${student.name}">
-            <td  th:text="${student.courses}"> 
-            <td>
-             <a th:href="@{/StudentData(id=${student.id})}" class="btn btn-secondary mb-2">See More</a> 
-            </td>
-          </tr>
-    
-          
-        </tbody>
-      </table>
+      </div>
     </div>
+    <div id="testfooter">
+      <span>Copyright &#169; ACE Inspiration 2022</span>
     </div>
-</div>
-</div>
-        <div id="testfooter">
-            <span>Copyright &#169; ACE Inspiration 2022</span>
-        </div>
-        <script>
-            /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
-            var dropdown = document.getElementsByClassName("dropdown-btn");
-            var i;
-            
-            for (i = 0; i < dropdown.length; i++) {
-              dropdown[i].addEventListener("click", function() {
-              this.classList.toggle("active");
-              var dropdownContent = this.nextElementSibling;
-              if (dropdownContent.style.display === "block") {
-              dropdownContent.style.display = "none";
-              } else {
-              dropdownContent.style.display = "block";
-              }
-              });
-            }
-            </script>
-</body>
+    <script>
+      /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+      var dropdown = document.getElementsByClassName('dropdown-btn')
+      var i
 
+      for (i = 0; i < dropdown.length; i++) {
+        dropdown[i].addEventListener('click', function () {
+          this.classList.toggle('active')
+          var dropdownContent = this.nextElementSibling
+          if (dropdownContent.style.display === 'block') {
+            dropdownContent.style.display = 'none'
+          } else {
+            dropdownContent.style.display = 'block'
+          }
+        })
+      }
+      $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+      })
+    </script>
+  </body>
 </html>
-
-
-

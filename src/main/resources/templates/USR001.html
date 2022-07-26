@@ -29,7 +29,7 @@
             <a th:href="@{MNU001.html}"><h3>Student Registration</h3></a>
         </div>  
         <div class="col-md-6">
-           <p th:text="${session.login_user}">User: </p>
+           <p th:if="${session.login_user!=null}"  th:text="${session.login_user.name}">User: </p>
            <p th:text=" ${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></p>
         </div>  
         <div class="col-md-1" >

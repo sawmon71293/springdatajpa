@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
@@ -14,13 +15,12 @@ import javax.validation.constraints.NotEmpty;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer userId;
+	private Integer id;
 	@NotEmpty
 	private String name;
 	@NotEmpty
 	@Email
 	private String email;
-
 	@NotEmpty
 	private String password;
 	private String role;
@@ -29,23 +29,32 @@ public class User {
 	{
 		
 	}
-	public User(Integer userId, @NotEmpty String name, @NotEmpty @Email String email, @NotEmpty String password,
+
+	public User(@NotEmpty String name, @NotEmpty @Email String email, @NotEmpty String password, String role) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.role = role;
+	}
+
+	public User(Integer id, @NotEmpty String name, @NotEmpty @Email String email, @NotEmpty String password,
 			String role) {
 		super();
-		this.userId = userId;
+		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.role = role;
 	}
 	public User(Integer userId) {
-		this.userId=userId;
+		this.id=userId;
 	}
-	public Integer getUserId() {
-		return userId;
+	public Integer getId() {
+		return id;
 	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setId(Integer userId) {
+		this.id = userId;
 	}
 	public String getName() {
 		return name;

@@ -51,11 +51,7 @@ public class Course {
 	}
 
 
-	public Course(Integer id, @NotEmpty String name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}
+	
 
 
 	public Course(Integer id) {

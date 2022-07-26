@@ -49,6 +49,17 @@ public class Student {
 		this.education = education;
 	}
 	
+	public Student(Integer id, @NotEmpty String name, @NotEmpty String dob, @NotEmpty String gender,
+			@NotEmpty String phone, @NotEmpty String education) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.dob = dob;
+		this.gender = gender;
+		this.phone = phone;
+		this.education = education;
+	}
+
 	@NotEmpty
 	@ManyToMany(cascade=CascadeType.PERSIST,fetch = FetchType.EAGER)
 	@JoinTable(
@@ -147,6 +158,20 @@ public class Student {
 		this.education = education;
 		this.courses = courses;
 	}
+	
+	
+
+	public Student(@NotEmpty String name, @NotEmpty String dob, @NotEmpty String gender, @NotEmpty String phone,
+			@NotEmpty String education, @NotEmpty List<Course> courses) {
+		super();
+		this.name = name;
+		this.dob = dob;
+		this.gender = gender;
+		this.phone = phone;
+		this.education = education;
+		this.courses = courses;
+	}
+
 
 	public Student() {
 		
@@ -157,8 +182,9 @@ public class Student {
 		this.courses.add(course);
 	}
 	
-	public void removeCourse( Course course) {
-		this.courses.remove(course);
+	public boolean removeCourse( Course course) {
+		boolean removed= this.courses.remove(course);
+		return removed;
 	}
 
 	

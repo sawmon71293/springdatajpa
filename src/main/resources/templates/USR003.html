@@ -28,7 +28,7 @@
             </a>
         </div>  
         <div class="col-md-6">
-            <p th:text="${session.login_user}">User: </p>
+            <p th:if="${session.login_user!=null}"  th:text="${session.login_user.name}">User: </p>
             <p th:text=" ${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></p>
         </div>  
         <div class="col-md-1" >
@@ -94,15 +94,15 @@
         
         <tr th:each="user: ${userList}">
             
-            <td th:text="${user.userId}"></td>
+            <td th:text="${user.id}"></td>
             <td th:text="${user.name}"></td>
             <td>
-             <a th:href="@{/UpdateUserPage(id=${user.userId})}"class="btn btn-success  ">Update</a>
+             <a th:href="@{/UpdateUserPage(id=${user.id})}"class="btn btn-success  ">Update</a>
              
               </td>
           
                 <td>
-               <a th:href="@{/DeleteUser(id=${user.userId})}" class="btn btn-secondary mb-3 ${not_delete}" 
+               <a th:href="@{/DeleteUser(id=${user.id})}" class="btn btn-secondary mb-3 ${not_delete}" 
                     data-bs-target="#exampleModal" >Delete</a>
                 </td>
     

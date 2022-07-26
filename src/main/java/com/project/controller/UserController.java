@@ -2,7 +2,6 @@ package com.project.controller;
 
 import java.sql.SQLException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -39,25 +38,27 @@ public class UserController {
 	public String loginUser(@RequestParam("email") String email, @RequestParam("password") String password,
 			HttpSession session, ModelMap model) throws SQLException {
 		
-          System.out.println(email + password);
+          
 		
 		if (email.isBlank() || password.isBlank()) {
 			model.addAttribute("error", "Please fill in your login details.");
 			return "LGN001";
 		} else {
-			if (userdao.getUserByEmailAndPassword(email, password) != null) {
-				session.setAttribute("login_user", email);
+			     User user=userdao.getUserByEmailAndPassword(email, password);
+			if (user != null) {
+				session.setAttribute("login_user", user);
 				return "MNU001";
-			} else {
+			} 
+			else {
 				model.addAttribute("error", "Invalid user email or password!");
-				return "/LGN001";
+				return "LGN001";
 			}
 		}
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logoutUser(HttpSession session, ModelMap model) {
-		session.invalidate();
+		//session.invalidate();
 
 		return "redirect:/LGN001";
 	}
@@ -65,15 +66,17 @@ public class UserController {
 	@RequestMapping(value = "/ShowUser", method = RequestMethod.GET)
 	public String showUser(ModelMap model,HttpSession ses) throws SQLException {
 		
-		  if(ses.getAttribute("login_user")==null) { return "LGN001";
-		  
-		  }
+		/*
+		 * if(ses.getAttribute("login_user")==null) { return "LGN001";
+		 * 
+		 * }
+		 */
 		 
 
 		List<User> userList = null;
-	          
+	         
 			userList =  userdao.findAll();
-		
+			 System.out.println(userList.size());
 		model.addAttribute("userList", userList);
 
 		return "USR003";
@@ -83,11 +86,11 @@ public class UserController {
 	public String searchUser(ModelMap model, @RequestParam("id")String id, @RequestParam("name") String name,HttpSession ses)
 			throws SQLException {
 
-		
-		  if(ses.getAttribute("login_user")==null) { 
-			  return "LGN001";
-		  
-		  }
+		/*
+		 * if(ses.getAttribute("login_user")==null) { return "LGN001";
+		 * 
+		 * }
+		 */
 		  List<User> userList = null;
 		 if(id.equals("") && name.equals("")) {
 			 userList = userdao.findAll();
@@ -95,20 +98,18 @@ public class UserController {
 		 }
 		 
 		 else if(!id.equals("")) {
-			 int temp = Integer.parseInt(id);
+			 int temp=0;
+			 try {
+				  temp = Integer.parseInt(id);
+				} catch (NumberFormatException ex) {
+					
+				}
+			  
 		     Integer searchId= (Integer) temp;
-		    	 userList=userdao.findDistinctByUserId(searchId);
+		    	 userList=userdao.findDistinctById(searchId);
 		    	if(userList != null) {
 		    		model.addAttribute("userList", userList);
-		    	}
-		    	else {
-		    		userList=null;
-		    		 model.addAttribute("userList", userList);
-		    	}
-		    		
-					
-		     
-		    
+		    	}  
 		 }
 		 else {
 			     userList =userdao.findDistinctByNameContaining(name);
@@ -123,22 +124,13 @@ public class UserController {
 
 	@RequestMapping(value = "/AddUserPage", method = RequestMethod.GET)
 	public ModelAndView addUserPage(ModelMap model,HttpSession ses) {
-		
-		  if(ses.getAttribute("login_user")==null) { return new ModelAndView("LGN001");
-		  
-		  }
 		 
 		return new ModelAndView("USR001", "user", new User());
 	}
 
 	@RequestMapping(value = "/AddUserSuccess", method = RequestMethod.GET)
 	public ModelAndView addUserSuccess(ModelMap model,HttpSession ses) {
-		
-		  if(ses.getAttribute("login_user")==null) { return new ModelAndView("LGN001");
-		  
-		  }
 		 
-		
 		model.addAttribute("message", "Registered Successful!");
 		return new ModelAndView("USR001", "user", new User());
 	}
@@ -146,17 +138,13 @@ public class UserController {
 	@RequestMapping(value = "/AddUser", method = RequestMethod.POST)
 	public String addUser(HttpSession ses,ModelMap model, @ModelAttribute("user")@Validated User user,BindingResult bs,
 			@RequestParam("confirmpass") String confirm) {
-		
-		  if(ses.getAttribute("login_user")==null) { return "LGN001";
-		  
-		  }
-		 
 		UserValidation uv = new UserValidation();
 		List<User> userList =  userdao.findAll();
 		if (bs.hasErrors()) {
 			return "USR001";
 		} else {
-			if (user.getPassword().equals(confirm)) {
+			String pass=user.getPassword();
+			if (pass.equals(confirm)) {
 					
 					if(userList!=null) {
 						 if (uv.userValidation(userList, user.getEmail())) {
@@ -183,35 +171,20 @@ public class UserController {
 	@RequestMapping(value = "/UpdateUserPage", method = RequestMethod.GET)
 	public ModelAndView updateUserPage(@RequestParam("id") Integer id, ModelMap model,HttpSession ses) throws SQLException {
 		
-		  if(ses.getAttribute("login_user")==null) { 
-			  
-			  return new ModelAndView("LGN001");
-		  
-		  }
-		 
 		User user=userdao.findById(id).get();
 		return new ModelAndView("USR002", "user",user);
 	}
 
 	@RequestMapping(value = "/UpdateUser", method = RequestMethod.POST)
-	public String updateUser(HttpSession ses,@ModelAttribute("user") User user, ModelMap model,
+	public String updateUser(HttpSession ses,@ModelAttribute("user")@Validated User user,BindingResult bs, ModelMap model,
 			@RequestParam("confirmpass") String confirmpass) throws SQLException {
-		
-		  if(ses.getAttribute("login_user")==null) {
-			  return "LGN001";
-		  
-		  }
+	
 		 
 		
 		List<User> userList = null;
-		Integer id = user.getUserId();
-		String name = user.getName();
-		String password = user.getPassword();
-		String role = user.getRole();
-		String email = user.getEmail();
-	
 		
-		if (name.isBlank() || password.isBlank() || confirmpass.isBlank() || !confirmpass.equals(password)) {
+		
+		if (bs.hasErrors() || confirmpass.equals("")) {
 			model.addAttribute("message", "Fill the blanks!");
 			return "USR002";
 		} else {
@@ -229,10 +202,6 @@ public class UserController {
 
 	@RequestMapping(value = "/DeleteUser", method = RequestMethod.GET)
 	public String deleteUser(HttpSession ses,@RequestParam("id")Integer id, ModelMap model) throws SQLException {
-		
-		  if(ses.getAttribute("login_user")==null) { return "LGN001";
-		  
-		  }
 		 
 			userdao.deleteById(id);
 			List<User> userList = null;

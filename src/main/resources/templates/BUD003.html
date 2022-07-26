@@ -28,7 +28,7 @@
         </div>  
         <div class="col-md-6">
          
-            <p th:text="${session.login_user}"></p>
+            <p th:if="${session.login_user!=null}"  th:text="${session.login_user.name}"></p>
           <p th:text=" ${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></p>
         </div>  
         <div class="col-md-1" >
